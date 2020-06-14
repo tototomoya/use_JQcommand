@@ -2,7 +2,7 @@ package main
 
 import (
     "encoding/gob"
-	"io/ioutil"
+    "io/ioutil"
     "os/exec"
     "fmt"
     "net/http"
@@ -11,7 +11,7 @@ import (
     "github.com/gorilla/mux"
     "github.com/gorilla/securecookie"
     "github.com/gorilla/sessions"
-	"strconv"
+    "strconv"
 )
 
 var store = sessions.NewCookieStore(securecookie.GenerateRandomKey(32))
@@ -35,12 +35,11 @@ func json_write(data Jsontext) {
 }
 
 func date_content_write(date string) {
-	s := "'. | select(.Date == " + strconv.Quote(date) + ") | select(.User_name == " + strconv.Quote("tomoya") + ") | .Content'"
-	s = "jq " + s + " test.json"
+    s := "'. | select(.Date == " + strconv.Quote(date) + ") | select(.User_name == " + strconv.Quote("tomoya") + ") | .Content'"
+    s = "jq " + s + " test.json"
     jq := exec.Command("bash", "-c", s)
     out, _ := jq.Output()
     _ = ioutil.WriteFile(date + "_tomoya", out, 0777)
-	fmt.Println(date)
 }
 
 func createSession(w http.ResponseWriter, r *http.Request) {
@@ -57,7 +56,7 @@ func createSession(w http.ResponseWriter, r *http.Request) {
     var diarys []Diary
     session, _ := store.Get(r, "getDiary")
     if session.Values["diary"] != nil {
-                diarys = session.Values["diary"].([]Diary)
+	diarys = session.Values["diary"].([]Diary)
         diarys = append(diarys, Diary{s, vars["content"]})
     } else {
         diarys = append(diarys, Diary{s, vars["content"]})
@@ -69,7 +68,7 @@ func createSession(w http.ResponseWriter, r *http.Request) {
     fmt.Fprint(w, ss)
 
     json_write(Jsontext{ vars["name"], s, vars["content"] } )
-	date_content_write(s)
+    date_content_write(s)
 }
 
 func getSession(w http.ResponseWriter, r *http.Request) {
