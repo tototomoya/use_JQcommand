@@ -28,13 +28,13 @@ type Jsontext struct {
 }
 
 
-func json_write(data Jsontext) {
+func write_json(data Jsontext) {
     jsondata, _ := json.Marshal(data)
     s := fmt.Sprintf("echo '%s' >> test.json", string(jsondata))
     _ = exec.Command("bash", "-c", s).Run()
 }
 
-func date_content_write(date string) {
+func write_DateContent(date string) {
     s := "'. | select(.Date == " + strconv.Quote(date) + ") | select(.User_name == " + strconv.Quote("tomoya") + ") | .Content'"
     s = "jq " + s + " test.json"
     jq := exec.Command("bash", "-c", s)
@@ -67,8 +67,8 @@ func createSession(w http.ResponseWriter, r *http.Request) {
     ss := fmt.Sprintf("cookieに%vを保存しました。", session.Values["diarys"])
     fmt.Fprint(w, ss)
 
-    json_write(Jsontext{ vars["name"], s, vars["content"] } )
-    date_content_write(s)
+    write_json(Jsontext{ vars["name"], s, vars["content"] } )
+    write_DateContent(s)
 }
 
 func getSession(w http.ResponseWriter, r *http.Request) {
